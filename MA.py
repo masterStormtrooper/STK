@@ -24,3 +24,5 @@ def profit_MA(dataframe, MAs:tuple, range:tuple):
     MAs: Which two MAs to cross.
     range: Date range.
     '''
+
+
