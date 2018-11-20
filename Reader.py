@@ -92,8 +92,8 @@ def converttodate(string):
 
 def findheaderidx(header, name):
     """Find column idx"""
-    for i in header:
-        if name.upper() in i.upper():
+    for i in range(len(header)):
+        if name.upper() in header[i].upper():
             return i
     return None
 
