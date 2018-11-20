@@ -9,12 +9,14 @@ class Stock:
         self.date = date
         self.op = openprice
         self.cp = closingprice
-        self.idx = None
+        self.idx = idx
         if moving_average is None:
             self.ma = {}
-
+        else:
+            self.ma = moving_average
     def __repr__(self):
-        return "Date:{0}, Opening Price:{1}, Closing Price:{2}".format(self.date, self.op, self.cp)
+        return "Date:{0}, Opening Price:{1}, Closing Price:{2}, MA: {3}"\
+            .format(self.date, self.op, self.cp, self.ma)
 
 
 class StockManager:
@@ -30,7 +32,7 @@ class StockManager:
     def __len__(self):
         return len(self.stocks)
 
-    def add(self, stock):
+    def add_stock(self, stock):
         """Add a stock to the manager"""
         loweridx = None
         for i in range(len(self.stocks)):
@@ -108,7 +110,8 @@ def readfile(filepth):
         cpidx = findheaderidx(header, "Price")
         opidx = findheaderidx(header, "Open")
         for i in reader:
-            if len(i[1]) != 0:
+            if len(i[opidx]) != 0:
+
                 astock = Stock(converttodate(i[dateidx]), float(i[opidx].replace(",", "")),
                                float(i[cpidx].replace(",", "")))
                 result.append(astock)
