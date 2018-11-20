@@ -21,6 +21,6 @@ def readfile(filepth):
         next(reader)
         for i in reader:
             if len(i[1]) != 0:
-                result.append([converttodate(i[0]), float(i[1])])
+                result.append([converttodate(i[0]), float(i[1]), float(i[4])])
     result.reverse()
     return result
