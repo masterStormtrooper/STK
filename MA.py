@@ -4,12 +4,12 @@ def find_MA(dataframe, x):
     '''Outputs a new dataframe with the x days MA
      appended to the end'''
     new=[]
-    for date in range(0,x):
+    for date in range(0,x-1):
         new.append(dataframe[date])
     for date in range(x,len(dataframe)):
         avg=0
         for j in range(x):
-            avg+=dataframe[date-j][2]
+            avg+=dataframe[date-j][1]
         avg=avg/x
         new.append(dataframe[date]+[avg])
     return new

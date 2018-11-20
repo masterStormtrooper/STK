@@ -22,4 +22,5 @@ def readfile(filepth):
         for i in reader:
             if len(i[1]) != 0:
                 result.append([converttodate(i[0]), float(i[1])])
+    result.reverse()
     return result
