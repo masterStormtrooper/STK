@@ -90,20 +90,27 @@ def converttodate(string):
         return datetime.strptime(string, "%m/%d/%Y")
 
 
+def findheaderidx(header, name):
+    """Find column idx"""
+    for i in header:
+        if name.upper() in i.upper():
+            return i
+    return None
+
+
 def readfile(filepth):
     """Read file, return [[date, closing price]...]"""
     result = []
     with open(filepth, "r") as f:
         reader = csv.reader(f)
-        next(reader)
+        header = next(reader)
+        dateidx = findheaderidx(header, "Date")
+        cpidx = findheaderidx(header, "Price")
+        opidx = findheaderidx(header, "Open")
         for i in reader:
             if len(i[1]) != 0:
-                astock = Stock(converttodate(i[0]), float(i[4].replace(",", "")), float(i[1]))
+                astock = Stock(converttodate(i[dateidx]), float(i[opidx].replace(",", "")),
+                               float(i[cpidx].replace(",", "")))
                 result.append(astock)
     result.reverse()
     return StockManager(result)
-
-
-s = readfile("hou.csv")
-print(s.customiter(2)[0])
-print(type(s.customiter(2)[0][0].date))
