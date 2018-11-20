@@ -30,6 +30,18 @@ class StockManager:
     def __len__(self):
         return len(self.stocks)
 
+    def add(self, stock):
+        """Add a stock to the manager"""
+        loweridx = None
+        for i in range(len(self.stocks)):
+            the_stock = self.stocks[i]
+            if the_stock.date < stock.date:
+                loweridx = i
+        if loweridx is None:
+            self.stocks.insert(0, stock)
+        else:
+            self.stocks.insert(loweridx + 1, stock)
+
     def findstockbydate(self, dateobj):
         """Find a stock by date"""
         for i in self.stocks:
@@ -42,10 +54,15 @@ class StockManager:
         """Get a slice of history"""
         if rang is None:
             return self
-        startdate = rang[0]
-        enddate = rang[1]
-        startidx = self.findstockbydate(startdate).idx
-        endidx = self.findstockbydate(enddate).idx
+        if isinstance(rang[0], datetime):
+            startdate = rang[0]
+            enddate = rang[1]
+            startidx = self.findstockbydate(startdate).idx
+            endidx = self.findstockbydate(enddate).idx
+        else:
+            assert isinstance(rang[0], int)
+            startidx = rang[0]
+            endidx = rang[1]
         if endidx == len(self.stocks) - 1:
             return self.__init__(self.stocks[startidx:])
         return self.__init__(self.stocks[startidx: endidx + 1])
@@ -89,3 +106,4 @@ def readfile(filepth):
 
 s = readfile("hou.csv")
 print(s.customiter(2)[0])
+print(type(s.customiter(2)[0][0].date))
