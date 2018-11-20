@@ -14,6 +14,13 @@ def find_MA(dataframe, x):
         new.append(dataframe[date]+[avg])
     return new
 
-def profit_MA(dataframe, range:tuple):
-    '''Inputs the dataframe with the MA.
+def profit_MA(dataframe, MAs:tuple, range:tuple):
+    '''
+    Outputs the profit of a given period using
+    buy/sell tactics when MAs cross.
+
+    Inputs:
+    dataframe: The dataframe.
+    MAs: Which two MAs to cross.
+    range: Date range.
     '''
