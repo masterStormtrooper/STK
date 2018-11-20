@@ -3,7 +3,7 @@ from datetime import datetime
 import csv
 
 
-class StockFeat:
+class Stock:
     """Stores the features of stocks"""
     def __init__(self, date, openprice, closingprice, moving_average=None, idx=None):
         self.date = date
@@ -13,21 +13,27 @@ class StockFeat:
         if moving_average is None:
             self.ma = {}
 
+    def __repr__(self):
+        return "Date:{0}, Opening Price:{1}, Closing Price:{2}".format(self.date, self.op, self.cp)
 
-class StockPrices:
+
+class StockManager:
     """Stores stock prices"""
     def __init__(self, lst):
-        self.stockhist = lst
+        self.stocks = lst
         for i in range(len(lst)):
-            self.stockhist[i].idx = i
+            self.stocks[i].idx = i
 
     def __getitem__(self, idx):
-        return self.stockhist[idx]
+        return self.stocks[idx]
+
+    def __len__(self):
+        return len(self.stocks)
 
     def findstockbydate(self, dateobj):
         """Find a stock by date"""
-        for i in self.stockhist:
-            the_stock = self.stockhist[i]
+        for i in self.stocks:
+            the_stock = self.stocks[i]
             if the_stock.date == dateobj:
                 return the_stock
         return None
@@ -40,17 +46,21 @@ class StockPrices:
         enddate = rang[1]
         startidx = self.findstockbydate(startdate).idx
         endidx = self.findstockbydate(enddate).idx
-        if endidx == len(self.stockhist) - 1:
-            return self.__init__(self.stockhist[startidx:])
-        return self.__init__(self.stockhist[startidx: endidx + 1])
+        if endidx == len(self.stocks) - 1:
+            return self.__init__(self.stocks[startidx:])
+        return self.__init__(self.stocks[startidx: endidx + 1])
 
     def customiter(self, interval, rang=None):
         """Custome iter"""
         historyslice = self.gethistoryslice(rang)
         assert isinstance(interval, int) and interval >= 2
+        lst = []
         startidx = interval - 1
-        for i in range(startidx, )
-
+        for i in range(startidx, len(historyslice)):
+            tmp = [historyslice[i-j] for j in range(interval)]
+            tmp.reverse()
+            lst.append(tmp)
+        return lst
 
 
 def converttodate(string):
@@ -71,7 +81,11 @@ def readfile(filepth):
         next(reader)
         for i in reader:
             if len(i[1]) != 0:
-                astock = StockFeat(converttodate(i[0]), float(i[4]), float(i[1]))
+                astock = Stock(converttodate(i[0]), float(i[4].replace(",", "")), float(i[1]))
                 result.append(astock)
     result.reverse()
-    return StockPrices(result)
+    return StockManager(result)
+
+
+s = readfile("hou.csv")
+print(s.customiter(2)[0])
