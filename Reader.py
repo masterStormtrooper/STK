@@ -3,6 +3,47 @@ from datetime import datetime
 import csv
 
 
+class StockFeat:
+    """Stores the features of stocks"""
+    def __init__(self, date, openprice, closingprice, moving_average=None, idx=None):
+        self.date = date
+        self.op = openprice
+        self.cp = closingprice
+        self.idx = None
+        if moving_average is None:
+            self.ma = {}
+
+
+class StockPrices:
+    """Stores stock prices"""
+    def __init__(self, lst):
+        self.stockhist = lst
+        for i in range(len(lst)):
+            self.stockhist[i].idx = i
+
+    def findstockbydate(self, dateobj):
+        """Find a stock by date"""
+        for i in self.stockhist:
+            the_stock = self.stockhist[i]
+            if the_stock.date == dateobj:
+                return the_stock
+        return None
+
+    def gethistoryslice(self, rang):
+        """Get a slice of history"""
+        startdate = rang[0]
+        enddate = rang[1]
+        startstk = self.findstockbydate(startdate)
+        endstk = self.findstockbydate(enddate)
+        return self.stockhist[startstk.idx: endstk.idx + 1]
+
+    def customiter(self, interval, rang=None):
+        """Custome iter"""
+        if rang is None:
+            historyslice =
+
+
+
 def converttodate(string):
     """Convert string to date"""
     yearlength = len(string.split("/")[-1])
