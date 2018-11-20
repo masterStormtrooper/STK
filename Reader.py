@@ -21,6 +21,9 @@ class StockPrices:
         for i in range(len(lst)):
             self.stockhist[i].idx = i
 
+    def __getitem__(self, idx):
+        return self.stockhist[idx]
+
     def findstockbydate(self, dateobj):
         """Find a stock by date"""
         for i in self.stockhist:
@@ -29,18 +32,24 @@ class StockPrices:
                 return the_stock
         return None
 
-    def gethistoryslice(self, rang):
+    def gethistoryslice(self, rang=None):
         """Get a slice of history"""
+        if rang is None:
+            return self
         startdate = rang[0]
         enddate = rang[1]
-        startstk = self.findstockbydate(startdate)
-        endstk = self.findstockbydate(enddate)
-        return self.stockhist[startstk.idx: endstk.idx + 1]
+        startidx = self.findstockbydate(startdate).idx
+        endidx = self.findstockbydate(enddate).idx
+        if endidx == len(self.stockhist) - 1:
+            return self.__init__(self.stockhist[startidx:])
+        return self.__init__(self.stockhist[startidx: endidx + 1])
 
     def customiter(self, interval, rang=None):
         """Custome iter"""
-        if rang is None:
-            historyslice =
+        historyslice = self.gethistoryslice(rang)
+        assert isinstance(interval, int) and interval >= 2
+        startidx = interval - 1
+        for i in range(startidx, )
 
 
 
@@ -62,6 +71,7 @@ def readfile(filepth):
         next(reader)
         for i in reader:
             if len(i[1]) != 0:
-                result.append([converttodate(i[0]), float(i[1]), float(i[4])])
+                astock = StockFeat(converttodate(i[0]), float(i[4]), float(i[1]))
+                result.append(astock)
     result.reverse()
-    return result
+    return StockPrices(result)
