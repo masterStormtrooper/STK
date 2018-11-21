@@ -2,6 +2,7 @@
 from datetime import datetime
 import csv
 import matplotlib.pyplot as plt
+import math
 
 
 class Stock:
@@ -72,7 +73,7 @@ class StockManager:
                 return the_stock
         return None
 
-    def plot_price(self, date_range: tuple, plot_bs = False):
+    def plot_price(self, date_range: tuple, plot_bs = False, plot_MA = False):
         """Plot the prices between the date range on a graph. Also plots B/S points. """
         data = self.gethistoryslice(date_range)
         price = []
@@ -80,11 +81,24 @@ class StockManager:
             price.append(stock.cp)
         plt.plot(range(len(data)), price)
         if plot_bs:
-            for i in range(len(self.stocks)):
-                if self.stocks[i].bs == 1:
-                    plt.plot(i, self.stocks[i].cp, 'go')
-                elif self.stocks[i].bs == -1:
-                    plt.plot(i, self.stocks[i].cp, 'ro')
+            for i in range(len(data.stocks)):
+                if data.stocks[i].bs == 1:
+                    plt.plot(i, data.stocks[i].cp, 'go')
+                elif data.stocks[i].bs == -1:
+                    plt.plot(i, data.stocks[i].cp, 'ro')
+        if plot_MA:
+            MA_dates = []
+            for key in data.stocks[0].ma:
+                MA_dates.append(key)
+            for key in MA_dates:
+                xline = list(range(len(data)))
+                yline = []
+                for i in range(len(data.stocks)):
+                    if math.isnan(data.stocks[i].ma[key]):
+                        xline.remove(i)
+                    else:
+                        yline.append(data.stocks[i].ma[key])
+                plt.plot(range(len(data)), yline)
 
     def gethistoryslice(self, rang=None):
         """Get a slice of history"""
