@@ -83,9 +83,9 @@ class StockManager:
         if plot_bs:
             for i in range(len(data.stocks)):
                 if data.stocks[i].bs == 1:
-                    plt.plot(i, data.stocks[i].cp, 'go')
-                elif data.stocks[i].bs == -1:
                     plt.plot(i, data.stocks[i].cp, 'ro')
+                elif data.stocks[i].bs == -1:
+                    plt.plot(i, data.stocks[i].cp, 'go')
         if plot_MA:
             MA_dates = []
             for key in data.stocks[0].ma:
