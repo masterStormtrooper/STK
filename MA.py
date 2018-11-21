@@ -32,7 +32,7 @@ def MAcross_bs(stocks: StockManager, MAs: tuple):
 
 
 
-def profit_MA(stocks: StockManager, MAs: tuple, date_range: tuple):
+def bs_MAcross(stocks: StockManager, MAs: tuple, date_range = ()):
     '''
     Outputs the a StockManager with buy/sell tactics updated,
     based on when MAs cross.
@@ -40,7 +40,7 @@ def profit_MA(stocks: StockManager, MAs: tuple, date_range: tuple):
     Inputs:
     dataframe: The dataframe.
     MAs: Which two MAs to cross.
-    date_range: Date range. (STARTS FROM 0)
+    date_range (Tuple): Date range. (STARTS FROM 0)
 
     Note:
         MAs[0] < MAs[1]
@@ -61,4 +61,6 @@ def profit_MA(stocks: StockManager, MAs: tuple, date_range: tuple):
                 updated.stocks[s].add_bs(1)
             else:
                 updated.stocks[s].add_bs(-1)
+    if date_range != ():
+        updated = updated.gethistoryslice(date_range)
     return updated
