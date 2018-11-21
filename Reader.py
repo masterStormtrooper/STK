@@ -32,6 +32,7 @@ class Stock:
         """
         self.bs = bs
 
+
 class StockManager:
     """Stores stock prices"""
     def __init__(self, lst):
@@ -63,7 +64,6 @@ class StockManager:
         #     self.stocks.insert(loweridx + 1, stock)
         self.stocks.append(stock)
 
-
     def findstockbydate(self, dateobj):
         """Find a stock by date"""
         for i in self.stocks:
@@ -72,7 +72,7 @@ class StockManager:
                 return the_stock
         return None
 
-    def plot_price(self, date_range: tuple, plot_bs = False):
+    def plot_price(self, date_range: tuple, plot_bs=False):
         """Plot the prices between the date range on a graph. Also plots B/S points. """
         data = self.gethistoryslice(date_range)
         price = []
