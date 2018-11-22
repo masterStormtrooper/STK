@@ -106,7 +106,7 @@ def bs_macross(stocks: StockManager, ma: tuple, date_range=()):
     updated = find_ma(stocks, ma)
     assert ma[0] < ma[1]
     prev_diff = updated[0].ma[str(ma[0])] - updated[0].ma[str(ma[1])]
-    for s in range(0, len(updated)):
+    for s in range(1, len(updated)):
         diff = updated[s].ma[str(ma[0])] - updated[s].ma[str(ma[1])]
         if not math.isnan(prev_diff) and not math.isnan(prev_diff) and prev_diff*diff < 0:
             if diff > 0:
