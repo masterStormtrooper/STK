@@ -6,8 +6,9 @@ import math
 
 
 class Stock:
-    """Stores the features of stocks"""
-    def __init__(self, date, openprice, closingprice, moving_average=None, idx=None, bs=None):
+    """Stores the features of stocks
+    """
+    def __init__(self, date, openprice, closingprice, moving_average = None, idx = None, bs = None):
         self.date = date
         self.op = openprice
         self.cp = closingprice
@@ -68,8 +69,9 @@ class StockManager:
                 return the_stock
         return None
 
-    def plot_price(self, date_range: tuple, plot_bs=False, plot_ma=False):
-        """Plot the prices between the date range on a graph. Also plots B/S points. """
+    def plot_price(self, date_range: tuple, plot_bs = False, plot_ma = False):
+        """Plot the prices between the date range on a graph. Also plots B/S points.
+        """
         data = self.gethistoryslice(date_range)
         price = []
         for stock in data:
@@ -95,7 +97,7 @@ class StockManager:
                         yline.append(data.stocks[i].ma[key])
                 plt.plot(range(len(data)), yline)
 
-    def get_profit(self, use_open=False, ganggan=None):
+    def get_profit(self, use_open = False, ganggan = None):
         """Get the profit/loss percentage based on the buy/sell.
         Buys when self.stock.bs = 1 and sells the when -1.
         Sell all shares before doing anything.
