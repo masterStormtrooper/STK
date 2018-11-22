@@ -1,10 +1,10 @@
-import Reader
-import MA
+import StockModule
+import MovingAverageStrategy
 import matplotlib.pyplot as plt
 
 
-data = Reader.readfile('td.csv')
-newdata = MA.find_MA(data, 6)
+data = StockModule.readfile('td.csv')
+newdata = MovingAverageStrategy.find_MA(data, 6)
 for i in range(6):
     print(newdata[i])
 print(newdata[49])

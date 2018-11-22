@@ -28,11 +28,20 @@ class Stock:
         """
         self.bs = bs
 
+    def get_ma(self):
+        """Get moving averages"""
+        return self.ma
+
 
 class StockManager:
     """Stores stock prices"""
-    def __init__(self, lst):
+    def __init__(self, lst, strategy="ma", *argv):
         self.stocks = lst
+        # developing features
+        self.strategy = strategy
+        if self.strategy == "ma":
+            assert isinstance(argv, tuple)
+
         for i in range(len(lst)):
             self.stocks[i].idx = i
 
@@ -94,60 +103,6 @@ class StockManager:
                     else:
                         yline.append(data.stocks[i].ma[key])
                 plt.plot(range(len(data)), yline)
-
-    def get_profit(self, use_open=False, ganggan=None):
-        """Get the profit/loss percentage based on the buy/sell.
-        Buys when self.stock.bs = 1 and sells the when -1.
-        Sell all shares before doing anything.
-
-        ganggan: Buy and sell weights. If none, then all buys and sells have weight 1.
-        Will implement when the program gets smarter.
-
-        use_open: If True, uses the open price of the next day.
-                If false, uses the close price of the previous day.
-                Comment: I don't think there should be a big difference.
-        """
-        trades = 0
-        invested = 0
-        # Debit and credit
-        cr = 0
-        dr = 0
-        first_tr8 = True
-        if use_open:
-            # Later
-            pass
-        else:
-            for stock in self:
-                if not first_tr8:
-                    if stock.bs == "buy":
-                        # Should be buying. Means that previous we hold a short position.
-                        cr += stock.cp
-                        # Buy stock.
-                        invested += stock.cp
-                        cr += stock.cp
-                        trades += 1
-                    elif stock.bs == "sell":
-                        # Should be selling. Means that previous we hold a long position.
-                        dr += stock.cp
-                        # Short stock.
-                        invested += stock.cp
-                        dr += stock.cp
-                        trades += 1
-                else:
-                    if stock.bs == "buy":
-                        # Buy stock.
-                        invested += stock.cp
-                        cr += stock.cp
-                        trades += 1
-                        first_tr8 = False
-                    elif stock.bs == "sell":
-                        # Sell stock
-                        invested += stock.cp
-                        dr += stock.cp
-                        trades += 1
-                        first_tr8 = False
-        return {'trades': trades, 'debit': dr, 'credit': cr,
-                'Profit': cr - dr, 'Invested': invested, 'Profit Margin': (cr - dr)/invested}
 
     def gethistoryslice(self, rang=None):
         """Get a slice of history"""
