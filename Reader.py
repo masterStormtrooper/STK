@@ -7,7 +7,7 @@ import math
 
 class Stock:
     """Stores the features of stocks"""
-    def __init__(self, date, openprice, closingprice, moving_average=None, idx=None):
+    def __init__(self, date, openprice, closingprice, moving_average=None, idx=None, bs=None):
         self.date = date
         self.op = openprice
         self.cp = closingprice
@@ -16,22 +16,18 @@ class Stock:
             self.ma = {}
         else:
             self.ma = moving_average
-        self.bs = 0
+        self.bs = bs
 
     def __repr__(self):
-        if self.bs == 0:
-            bs = 'N/A'
-        elif self.bs == -1:
-            bs = 'Sell'
-        else:
-            bs = 'Buy'
         return "Date:{0}, Opening Price:{1}, Closing Price:{2}, MA: {3}, B/S: {4}"\
-            .format(self.date, self.op, self.cp, self.ma, bs)
+            .format(self.date, self.op, self.cp, self.ma, self.bs)
 
-    def add_bs(self, bs: int):
-        """Add a buy/sell to this date. +1 is buy, 0 is do nothing, -1 is sell.
+    def add_bs(self, bs: str):
+        """Add a buy/sell to this date.
+            bs: 'sell' | 'buy'
         """
         self.bs = bs
+
 
 class StockManager:
     """Stores stock prices"""
@@ -64,8 +60,7 @@ class StockManager:
         #     self.stocks.insert(loweridx + 1, stock)
         self.stocks.append(stock)
 
-
-    def findstockbydate(self, dateobj):
+    def findstockbydate(self, dateobj: datetime):
         """Find a stock by date"""
         for i in self.stocks:
             the_stock = self.stocks[i]
@@ -73,7 +68,7 @@ class StockManager:
                 return the_stock
         return None
 
-    def plot_price(self, date_range: tuple, plot_bs = False, plot_MA = False):
+    def plot_price(self, date_range: tuple, plot_bs=False, plot_ma=False):
         """Plot the prices between the date range on a graph. Also plots B/S points. """
         data = self.gethistoryslice(date_range)
         price = []
@@ -82,15 +77,15 @@ class StockManager:
         plt.plot(range(len(data)), price)
         if plot_bs:
             for i in range(len(data.stocks)):
-                if data.stocks[i].bs == 1:
+                if data.stocks[i].bs == "buy":
                     plt.plot(i, data.stocks[i].cp, 'ro')
-                elif data.stocks[i].bs == -1:
+                elif data.stocks[i].bs == "sell":
                     plt.plot(i, data.stocks[i].cp, 'go')
-        if plot_MA:
-            MA_dates = []
+        if plot_ma:
+            ma_dates = []
             for key in data.stocks[0].ma:
-                MA_dates.append(key)
-            for key in MA_dates:
+                ma_dates.append(key)
+            for key in ma_dates:
                 xline = list(range(len(data)))
                 yline = []
                 for i in range(len(data.stocks)):
@@ -100,7 +95,7 @@ class StockManager:
                         yline.append(data.stocks[i].ma[key])
                 plt.plot(range(len(data)), yline)
 
-    def get_profit(self, use_open = False, ganggan = None):
+    def get_profit(self, use_open=False, ganggan=None):
         """Get the profit/loss percentage based on the buy/sell.
         Buys when self.stock.bs = 1 and sells the when -1.
         Sell all shares before doing anything.
@@ -124,14 +119,14 @@ class StockManager:
         else:
             for stock in self:
                 if not first_tr8:
-                    if stock.bs == 1:
+                    if stock.bs == "buy":
                         # Should be buying. Means that previous we hold a short position.
                         cr += stock.cp
                         # Buy stock.
                         invested += stock.cp
                         cr += stock.cp
                         trades += 1
-                    elif stock.bs == -1:
+                    elif stock.bs == "sell":
                         # Should be selling. Means that previous we hold a long position.
                         dr += stock.cp
                         # Short stock.
@@ -139,20 +134,20 @@ class StockManager:
                         dr += stock.cp
                         trades += 1
                 else:
-                    if stock.bs == 1:
+                    if stock.bs == "buy":
                         # Buy stock.
                         invested += stock.cp
                         cr += stock.cp
                         trades += 1
                         first_tr8 = False
-                    elif stock.bs == -1:
+                    elif stock.bs == "sell":
                         # Sell stock
                         invested += stock.cp
                         dr += stock.cp
                         trades += 1
                         first_tr8 = False
         return {'trades': trades, 'debit': dr, 'credit': cr,
-                'Profit': cr - dr,'Invested': invested, 'Profit Margin': (cr - dr)/invested}
+                'Profit': cr - dr, 'Invested': invested, 'Profit Margin': (cr - dr)/invested}
 
     def gethistoryslice(self, rang=None):
         """Get a slice of history"""

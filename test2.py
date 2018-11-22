@@ -1,4 +1,5 @@
-from STK import MA, Reader
+import MA
+import Reader
 import time
 import matplotlib.pyplot as plt
 start_time = time.time()
@@ -9,7 +10,7 @@ MAs = (5, 10)
 
 
 data = Reader.readfile('td.csv')
-new=MA.bs_MAcross(data, MAs)
+new = MA.bs_macross(data, MAs)
 # print(new)
 # new.plot_price(date_range, True, True)
 # plt.show()
